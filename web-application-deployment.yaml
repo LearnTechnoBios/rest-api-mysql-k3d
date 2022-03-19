@@ -1,0 +1,61 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: web-application 
+  name: web-application 
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: web-application
+  template:
+    metadata:
+      labels:
+        app: web-application
+    spec:
+      containers:
+      - image: <image-name:image-tag >  
+        name: web-application
+        imagePullPolicy: Always        
+        resources:
+          limits:
+            cpu: "0.3"
+            memory: "512Mi"
+          requests:
+            cpu: "0.3"
+            memory: "256Mi"
+        env:
+          - name: FLASK_APP
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: FLASK_APP
+          - name: MYSQL_ROOT_USER
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: MYSQL_ROOT_USER
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: MYSQL_ROOT_PASSWORD
+          - name: MYSQL_ROOT_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: MYSQL_ROOT_HOST
+          - name: MYSQL_ROOT_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: MYSQL_ROOT_PORT
+          - name: MYSQL_ROOT_DB
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: MYSQL_ROOT_DB
